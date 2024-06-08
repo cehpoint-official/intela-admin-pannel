@@ -7,13 +7,8 @@ const WebDev = () => {
     const [editedText, setEditedText] = useState('');
     const [editedImage, setEditedImage] = useState('');
     const [activeEditId, setActiveEditId] = useState('');
-    const [items, setItems] = useState([
-        { heading: "Custom Website Development" },
-        // { heading: "E-commerce Website" },
-        // { heading: "Wordpress Website" },
-        // { heading: "Portfolio Website" },
-        // { heading: "Mern-stack Website" },
-    ]);
+
+    const [items, setItems] = useState([])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -45,7 +40,13 @@ const WebDev = () => {
     const handleTextChange = (e) => {
         setEditedText(e.target.value);
     };
-
+    const arrr = [
+        "Custom Website Development",
+        "E-Commerce Website",
+        "Wordpress Website",
+        "Portfolio Website",
+        "Mern-stack Website"
+    ]
     const handleImageChange = (e) => {
         setEditedImage(e.target.value);
     };
@@ -74,10 +75,13 @@ const WebDev = () => {
     return (
         <>
             <div className="grid lg:grid-cols-2 gap-10 p-10 sm:grid-cols-1">
-                {items && items.map((item) => (
+
+                {items && items.map((item, index) => (
                     <div key={item.id} className="flex flex-col p-4 bg-blue-900 shadow-2xl rounded-lg">
                         <div className="pl-2 flex justify-between items-center text-white bg-blue-800 h-10 w-full rounded">
-                            <h2 className="text-xl text-white">{item.heading}</h2>
+                            <h2 className="text-xl text-white">
+                                {arrr[index]}
+                            </h2>
                             <button className="text-lg mr-5" onClick={() => openModal(item)}>Edit</button>
                         </div>
                         <div className='flex'>
@@ -87,6 +91,8 @@ const WebDev = () => {
                         <p className="text-white text-end">Updated</p>
                     </div>
                 ))}
+
+
             </div>
 
             {isModalOpen && (

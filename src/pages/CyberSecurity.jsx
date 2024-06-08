@@ -1,55 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getFirestore, collection, getDocs, doc, updateDoc } from "firebase/firestore";
+import { db } from '../config/firebase';
 
 const CyberSecurity = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editedMsg, setEditedMsg] = useState('');
     const [editedImg, setEditedImg] = useState('');
-    const [cards, setCards] = useState([
-        {
-            id: 1,
-            title: 'Vulnerability Assessment and Penetration Testing (VAPT)',
-            msg: 'Vulnerability Assessment (VA) finds security weaknesses, while Penetration Testing (Pen Testing) simulates attacks to test defenses. Both are crucial for improving cybersecurity..',
-            imgUrl: 'https://intela-main.web.app/assets/cs-feature1-e0N9yy6a.png',
-        },
-        {
-            id: 2,
-            title: 'Security Audits and Assessments',
-            msg: 'Security audits and assessments are evaluations of an organizations security measures. Audits typically involve checking compliance with policies and standards, while assessments focus on identifying vulnerabilities and risks...',
-            imgUrl: 'https://intela-main.web.app/assets/cs-feature2-edJ8E7hw.png',
-        },
-        {
-            id: 3,
-            title: 'Security Incident Response and Management',
-            msg: 'Security Incident Response and Management involves reacting to and handling cybersecurity breaches and threats. It includes identifying, mitigating, and recovering from incidents to minimize damage and restore normal operations swiftly...',
-            imgUrl: 'https://intela-main.web.app/assets/cs-feature3-q7agk0Hl.png',
-        },
-        {
-            id: 4,
-            title: 'Security Awareness Training',
-            msg: 'Security Awareness Training educates individuals about cybersecurity risks, best practices, and policies. It aims to enhance awareness and promote responsible behavior to protect against cyber threats...',
-            imgUrl: 'https://intela-main.web.app/assets/cs-feature4-l2YI5hXk.png',
-        },
-        {
-            id: 5,
-            title: 'Security Architecture and Design',
-            msg: 'Security Architecture and Design involves creating robust and effective security frameworks for IT systems. It focuses on designing structures and strategies to protect against cyber threats and ensure data confidentiality, integrity, and availability....',
-            imgUrl: 'https://intela-main.web.app/assets/cs-feature5-NP43vvP0.png',
-        },
-        {
-            id: 6,
-            title: 'Security Risk Assessment and Management',
-            msg: 'Security Risk Assessment and Management involves identifying, analyzing, and mitigating security risks to protect assets and data. It helps organizations understand threats and vulnerabilities to make informed decisions about security measures...',
-            imgUrl: 'https://intela-main.web.app/assets/cs-feature6-qaGVBRM9.png',
-        },
-        {
-            id: 7,
-            title: 'Compliance and Regulatory Services',
-            msg: 'Compliance and Regulatory Services ensure organizations adhere to legal and industry-specific standards and regulations related to security, privacy, and data protection....',
-            imgUrl: 'https://intela-main.web.app/assets/cs-feature7-mInwDuVY.png',
-        },
-        // ... other card objects
-    ]);
+    const [cards, setCards] = useState([]);
     const [activeCard, setActiveCard] = useState(null);
+    const arr = [
+        "Vulnerability Assessment and Penetration Testing",
+        "Security Audits and Assessments",
+        "Security Incident Response and Management",
+        "Security Awareness Training",
+        "Security Architecture and Design",
+        "Security Risk Assessment and Management",
+        "Compliance and Regulatory Services",
+    ];
+
+    // Fetch cards from Firestore
+    useEffect(() => {
+        const fetchCards = async () => {
+            const querySnapshot = await getDocs(collection(db, "cyber-security"));
+            const cardsData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+            setCards(cardsData.slice(0, 7)); // Ensure only 7 cards are set
+        };
+
+        fetchCards();
+    }, []);
 
     const openModal = (card) => {
         setIsModalOpen(true);
@@ -70,10 +48,15 @@ const CyberSecurity = () => {
         setEditedImg(e.target.value);
     };
 
-    const handleUpdate = () => {
+    const handleUpdate = async () => {
+        const updatedCard = { msg: editedMsg, imgUrl: editedImg };
+        const cardRef = doc(db, "cyber-security", activeCard);
+
+        await updateDoc(cardRef, updatedCard);
+
         setCards(cards.map(card =>
             card.id === activeCard
-                ? { ...card, msg: editedMsg, imgUrl: editedImg }
+                ? { ...card, ...updatedCard }
                 : card
         ));
         closeModal();
@@ -82,13 +65,13 @@ const CyberSecurity = () => {
     return (
         <div className="grid lg:grid-cols-2 gap-10 p-10 sm:grid-cols-1">
             {cards.map((card, index) => (
-                <div key={index} className="flex flex-col p-4 bg-blue-900 shadow-2xl rounded-lg">
+                <div key={card.id} className="flex flex-col p-4 bg-blue-900 shadow-2xl rounded-lg">
                     <div className="pl-2 flex justify-between items-center text-white bg-blue-800 h-16 w-full rounded">
-                        <h2 className="text-xl">{card.title}</h2>
+                        <h2 className="text-xl text-white">{arr[index]}</h2>
                         <button className="text-lg mr-5" onClick={() => openModal(card)}>Edit</button>
                     </div>
                     <div className='flex'>
-                        <img src={card.imgUrl} alt="Placeholder Image" className="my-6 sm:w-40 max-w-60 rounded-2xl" />
+                        <img src={card.imgUrl} alt={`${card.title} Image`} className="my-6 sm:w-40 max-w-60 rounded-2xl" />
                         <p className='my-10 text-white m-4'>{card.msg}</p>
                     </div>
                     <p className='text-white text-end'>Update</p>
@@ -104,6 +87,7 @@ const CyberSecurity = () => {
                             value={editedMsg}
                             onChange={handleMsgChange}
                             placeholder="Edit text"
+                            aria-label="Edit text"
                         />
                         <input
                             type="text"
@@ -111,6 +95,7 @@ const CyberSecurity = () => {
                             value={editedImg}
                             onChange={handleImgChange}
                             placeholder="Edit image URL"
+                            aria-label="Edit image URL"
                         />
                         <div className="flex justify-end mt-4">
                             <button

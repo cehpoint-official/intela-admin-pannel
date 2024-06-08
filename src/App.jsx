@@ -12,6 +12,8 @@ import ContactUs from './pages/ContactUs'
 import NewPost from './pages/NewPost'
 import DraftPost from './pages/DraftPost'
 import Leads from './pages/Leads'
+import Loginpage from './pages/Loginpage'
+import Register from './pages/Register'
 
 const App = () => {
   return <div className='bg-blue-900'>
@@ -22,13 +24,16 @@ const App = () => {
           <Route path='webdev' element={<WebDev />} />
           <Route path='appdev' element={<AppDev />} />
           <Route path='cyber' element={<CyberSecurity />} />
-          <Route path='leads' element={<Leads/>} />
+          <Route path='leads' element={<Leads />} />
           <Route path='manager' element={<BlogManager />} />
           <Route path='newpost' element={<NewPost />} />
           <Route path='draftpost' element={<DraftPost />} />
           <Route path='company' element={<Company />} />
           <Route path='about' element={<AboutUs />} />
           <Route path='contact' element={<ContactUs />} />
+          <Route path='login' element={<Loginpage />} />
+          <Route path='register' element={<Register />} />
+
           {/* <Route path='order' element={<Order />} /> */}
           {/* <Route path='login' element={<Login />} /> */}
           {/* <Route path='register' element={<Register />} /> */}

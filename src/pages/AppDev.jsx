@@ -8,11 +8,14 @@ const AppDev = () => {
     const [editedImg, setEditedImg] = useState('');
     const [activeId, setActiveId] = useState('');
     const [items, setItems] = useState([
-        { heading: "UX/UI Design" },
-        { heading: "Android App Development" },
-        { heading: "IOS App Development" },
-        { heading: "Cross Platform App Development" },
+
     ]);
+    const arr = [
+        "UX/UI Design",
+        "Android App Development",
+        "IOS App Development",
+        "Cross Platform App Development",
+    ]
 
     useEffect(() => {
         const fetchData = async () => {
@@ -72,10 +75,10 @@ const AppDev = () => {
     return (
         <div class="grid lg:grid-cols-2 gap-10 p-10 sm:grid-cols-1">
             {
-                items.map((item) => (
+                items.map((item, index) => (
                     <div class="flex flex-col p-4 bg-blue-900 shadow-2xl rounded-lg">
                         <div class="pl-2 flex justify-between items-center text-white bg-blue-800 h-10 w-full rounded">
-                            <h2 className="text-xl text-white">{item.heading}</h2>
+                            <h2 className="text-xl text-white">{arr[index]}</h2>
                             <button className="text-lg mr-5" onClick={() => openModal(item)}>Edit</button>
 
                         </div>
