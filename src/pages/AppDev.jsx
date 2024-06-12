@@ -1,4 +1,4 @@
-import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, onSnapshot, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { db } from '../config/firebase';
 
@@ -17,17 +17,18 @@ const AppDev = () => {
         "Cross Platform App Development",
     ]
 
+
+
     useEffect(() => {
-        const fetchData = async () => {
-            const querySnapshot = await getDocs(collection(db, 'app-development'));
+        const unsubscribe = onSnapshot(collection(db, 'app-development'), (querySnapshot) => {
             const itemsArray = [];
             querySnapshot.forEach((doc) => {
                 itemsArray.push({ id: doc.id, ...doc.data() });
             });
-            setItems(itemsArray.slice(0, 4)); // Show only the first 4 items
-        };
+            setItems(itemsArray.slice(0, 4)); // Show only the first 5 items
+        });
 
-        fetchData();
+        return () => unsubscribe(); // Cleanup subscription on unmount
     }, []);
 
     const openModal = (item) => {
@@ -71,6 +72,7 @@ const AppDev = () => {
                 console.error("Error updating document: ", error);
             }
         }
+        setIsModalOpen(false);
     };
     return (
         <div class="grid lg:grid-cols-2 gap-10 p-10 sm:grid-cols-1">

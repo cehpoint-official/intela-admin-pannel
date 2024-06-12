@@ -1,32 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import { getFirestore, collection, getDocs, doc, updateDoc } from "firebase/firestore";
-import { db } from '../config/firebase';
+import { collection, onSnapshot, doc, updateDoc } from 'firebase/firestore';
+import { db } from '../config/firebase'; // Adjust the path to your Firebase configuration
 
 const CyberSecurity = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editedMsg, setEditedMsg] = useState('');
     const [editedImg, setEditedImg] = useState('');
     const [cards, setCards] = useState([]);
-    const [activeCard, setActiveCard] = useState(null);
+
     const arr = [
-        "Vulnerability Assessment and Penetration Testing",
-        "Security Audits and Assessments",
-        "Security Incident Response and Management",
-        "Security Awareness Training",
-        "Security Architecture and Design",
-        "Security Risk Assessment and Management",
-        "Compliance and Regulatory Services",
+        'Vulnerability Assessment and Penetration Testing (VAPT)',
+        'Security Audits and Assessments',
+        'Security Incident Response and Management',
+        'Security Awareness Training',
+        'Security Architecture and Design',
+        'Security Risk Assessment and Management',
+        'Compliance and Regulatory Services',
     ];
 
-    // Fetch cards from Firestore
-    useEffect(() => {
-        const fetchCards = async () => {
-            const querySnapshot = await getDocs(collection(db, "cyber-security"));
-            const cardsData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-            setCards(cardsData.slice(0, 7)); // Ensure only 7 cards are set
-        };
+    const [activeCard, setActiveCard] = useState(null);
 
-        fetchCards();
+    // useEffect(() => {
+    //     const unsubscribe = onSnapshot(collection(db, 'cyber-security'), (snapshot) => {
+    //         const itemsArray = [];
+    //         snapshot.forEach((doc) => {
+    //             itemsArray.push({ id: doc.id, ...doc.data() });
+    //         });
+    //         setItems(itemsArray.slice(0, 7));
+    //     });
+
+    //     return () => unsubscribe();
+    // }, []);
+
+    useEffect(() => {
+        const unsubscribe = onSnapshot(collection(db, 'cyber-security'), (querySnapshot) => {
+            const itemsArray = [];
+            querySnapshot.forEach((doc) => {
+                itemsArray.push({ id: doc.id, ...doc.data() });
+            });
+            setCards(itemsArray.slice(0, 7)); // Show only the first 5 items
+        });
+
+        return () => unsubscribe(); // Cleanup subscription on unmount
     }, []);
 
     const openModal = (card) => {
@@ -38,6 +53,9 @@ const CyberSecurity = () => {
 
     const closeModal = () => {
         setIsModalOpen(false);
+        setEditedMsg('');
+        setEditedImg('');
+        setActiveCard(null);
     };
 
     const handleMsgChange = (e) => {
@@ -49,17 +67,21 @@ const CyberSecurity = () => {
     };
 
     const handleUpdate = async () => {
-        const updatedCard = { msg: editedMsg, imgUrl: editedImg };
-        const cardRef = doc(db, "cyber-security", activeCard);
-
-        await updateDoc(cardRef, updatedCard);
-
-        setCards(cards.map(card =>
-            card.id === activeCard
-                ? { ...card, ...updatedCard }
-                : card
-        ));
-        closeModal();
+        if (activeCard) {
+            const docRef = doc(db, 'cyber-security', activeCard);
+            try {
+                await updateDoc(docRef, {
+                    msg: editedMsg,
+                    imgUrl: editedImg,
+                });
+                setCards(cards.map(card =>
+                    card.id === activeCard ? { ...card, msg: editedMsg, imgUrl: editedImg } : card
+                ));
+                closeModal();
+            } catch (error) {
+                console.error("Error updating document: ", error);
+            }
+        }
     };
 
     return (
@@ -67,11 +89,11 @@ const CyberSecurity = () => {
             {cards.map((card, index) => (
                 <div key={card.id} className="flex flex-col p-4 bg-blue-900 shadow-2xl rounded-lg">
                     <div className="pl-2 flex justify-between items-center text-white bg-blue-800 h-16 w-full rounded">
-                        <h2 className="text-xl text-white">{arr[index]}</h2>
+                        <h2 className="text-xl">{arr[index]}</h2>
                         <button className="text-lg mr-5" onClick={() => openModal(card)}>Edit</button>
                     </div>
                     <div className='flex'>
-                        <img src={card.imgUrl} alt={`${card.title} Image`} className="my-6 sm:w-40 max-w-60 rounded-2xl" />
+                        <img src={card.imgUrl} alt="Placeholder Image" className="my-6 sm:w-40 max-w-60 rounded-2xl" />
                         <p className='my-10 text-white m-4'>{card.msg}</p>
                     </div>
                     <p className='text-white text-end'>Update</p>
@@ -87,7 +109,6 @@ const CyberSecurity = () => {
                             value={editedMsg}
                             onChange={handleMsgChange}
                             placeholder="Edit text"
-                            aria-label="Edit text"
                         />
                         <input
                             type="text"
@@ -95,7 +116,6 @@ const CyberSecurity = () => {
                             value={editedImg}
                             onChange={handleImgChange}
                             placeholder="Edit image URL"
-                            aria-label="Edit image URL"
                         />
                         <div className="flex justify-end mt-4">
                             <button

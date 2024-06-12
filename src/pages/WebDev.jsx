@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { doc, updateDoc, collection, getDocs } from 'firebase/firestore';
+import { doc, updateDoc, collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
 const WebDev = () => {
@@ -7,26 +7,24 @@ const WebDev = () => {
     const [editedText, setEditedText] = useState('');
     const [editedImage, setEditedImage] = useState('');
     const [activeEditId, setActiveEditId] = useState('');
-
-    const [items, setItems] = useState([])
+    const [items, setItems] = useState([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const querySnapshot = await getDocs(collection(db, 'web-development'));
+        const unsubscribe = onSnapshot(collection(db, 'web-development'), (querySnapshot) => {
             const itemsArray = [];
             querySnapshot.forEach((doc) => {
                 itemsArray.push({ id: doc.id, ...doc.data() });
             });
             setItems(itemsArray.slice(0, 5)); // Show only the first 5 items
-        };
+        });
 
-        fetchData();
+        return () => unsubscribe(); // Cleanup subscription on unmount
     }, []);
 
     const openModal = (item) => {
         setIsModalOpen(true);
-        setEditedText(item.text); // Set the current text as the initial value
-        setEditedImage(item.imgUrl); // Set the current image URL as the initial value
+        setEditedText(item.message); // Set the current text as the initial value
+        setEditedImage(item.imageUrl); // Set the current image URL as the initial value
         setActiveEditId(item.id); // Set the id of the document to update
     };
 
@@ -40,20 +38,13 @@ const WebDev = () => {
     const handleTextChange = (e) => {
         setEditedText(e.target.value);
     };
-    const arrr = [
-        "Custom Website Development",
-        "E-Commerce Website",
-        "Wordpress Website",
-        "Portfolio Website",
-        "Mern-stack Website"
-    ]
+
     const handleImageChange = (e) => {
         setEditedImage(e.target.value);
     };
 
     const handleUpdate = async () => {
         if (activeEditId) {
-            // Update Firestore with the new text and image URL
             const docRef = doc(db, 'web-development', activeEditId);
             try {
                 await updateDoc(docRef, {
@@ -61,10 +52,7 @@ const WebDev = () => {
                     imageUrl: editedImage,
                 });
 
-                // Update the local state with the new text and image URL
-                setItems(items.map(item =>
-                    item.id === activeEditId ? { ...item, text: editedText, imgUrl: editedImage } : item
-                ));
+                // No need to update local state manually as onSnapshot will handle it
                 closeModal();
             } catch (error) {
                 console.error("Error updating document: ", error);
@@ -72,15 +60,22 @@ const WebDev = () => {
         }
     };
 
+    const titles = [
+        "Custom Website Development",
+        "E-commerce Website",
+        "Wordpress Website",
+        "Portfolio Website",
+        "Mern-stack Website"
+    ];
+
     return (
         <>
             <div className="grid lg:grid-cols-2 gap-10 p-10 sm:grid-cols-1">
-
                 {items && items.map((item, index) => (
                     <div key={item.id} className="flex flex-col p-4 bg-blue-900 shadow-2xl rounded-lg">
                         <div className="pl-2 flex justify-between items-center text-white bg-blue-800 h-10 w-full rounded">
                             <h2 className="text-xl text-white">
-                                {arrr[index]}
+                                {titles[index]}
                             </h2>
                             <button className="text-lg mr-5" onClick={() => openModal(item)}>Edit</button>
                         </div>
@@ -91,8 +86,6 @@ const WebDev = () => {
                         <p className="text-white text-end">Updated</p>
                     </div>
                 ))}
-
-
             </div>
 
             {isModalOpen && (

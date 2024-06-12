@@ -1,12 +1,38 @@
-import React from 'react';
+import { collection, onSnapshot } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { db } from '../config/firebase';
 
 const Leads = () => {
+    const [serviceCount, setServiceCount] = useState(0);
+    const [partnerServiceCount, setPartnerServiceCount] = useState(0);
+    const [que, setQue] = useState(0)
+
+
+    useEffect(() => {
+        const unsubscribeService = onSnapshot(collection(db, 'service'), (snapshot) => {
+            setServiceCount(snapshot.size); // Update state with the count of documents
+        });
+
+        const unsubscribePartnerService = onSnapshot(collection(db, 'partner-services'), (snapshot) => {
+            setPartnerServiceCount(snapshot.size); // Update state with the count of documents
+        });
+        const unsubscribeContact = onSnapshot(collection(db, 'contact'), (snapshot) => {
+            setQue(snapshot.size); // Update state with the count of documents
+        });
+
+        // Cleanup the subscriptions when the component unmounts
+        return () => {
+            unsubscribeService();
+            unsubscribePartnerService();
+            unsubscribeContact();
+        };
+    }, []);
     return (
         <div class="grid lg:grid-cols-2 gap-10 p-10 sm:grid-cols-1">
             <div class="flex flex-col p-4 bg-blue-900 shadow-2xl rounded-lg">
                 <div class="pl-2 flex justify-between items-center text-white bg-blue-800 h-10 sm:h-auto w-full rounded">
-                    <h2 class="text-lg sm:text-base">Call Back Request</h2>
-                    <button class="text-lg mr-4">10</button>
+                    <h2 class="text-lg sm:text-base">Demo Request</h2>
+                    <button class="text-lg mr-4">{serviceCount}</button>
                 </div>
                 <div className='flex'>
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbHo9OIWFSxAiylc3Km3drPlkcEXDGwQtBLA&s" alt="Placeholder Image" class="my-6 sm:w-40 max-w-60 rounded-2xl" />
@@ -29,8 +55,8 @@ const Leads = () => {
             </div>
             <div class="flex flex-col p-4 bg-blue-900 shadow-2xl rounded-lg">
                 <div class="pl-2 flex justify-between items-center text-white bg-blue-800 h-10 sm:h-auto w-full rounded">
-                    <h2 class="text-lg sm:text-base">Demo Request</h2>
-                    <button class="text-lg mr-4">08</button>
+                    <h2 class="text-lg sm:text-base">Call Back Request</h2>
+                    <button class="text-lg mr-4">{partnerServiceCount}</button>
                 </div>
                 <div className='flex'>
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_UkMqRCCB39CMUjG3yVFS3C0tlSmSVl_XWg&s" alt="Placeholder Image" class="my-6 sm:w-40 max-w-60 rounded-2xl" />
@@ -42,7 +68,7 @@ const Leads = () => {
             <div class="flex flex-col p-4 bg-blue-900 shadow-2xl rounded-lg">
                 <div class="pl-2 flex justify-between items-center text-white bg-blue-800 h-16 sm:h-auto w-full rounded">
                     <h2 class="text-lg sm:text-base">Quotation Request</h2>
-                    <button class="text-lg mr-4">06</button>
+                    <button class="text-lg mr-4">{que}</button>
                 </div>
                 <div className='flex'>
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvFQaS_JSuTUvuvkjcVnaIfAAIzI9o1lMLFw&s" alt="Placeholder Image" class="my-6 sm:w-40 max-w-60 rounded-2xl" />
