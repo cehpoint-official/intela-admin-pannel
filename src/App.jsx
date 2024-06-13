@@ -20,14 +20,15 @@ import Loginpage from './auth/Loginpage';
 const App = () => {
   const [user] = useAuthState(auth);
 
+  const handleLogout = async () => {
+    await auth.signOut();
+  };
+
   return (
     <div className='bg-blue-900'>
       <BrowserRouter>
         <Routes>
-          <Route
-            path='/service'
-            element={user ? <Service /> : <Navigate to="/login" />}
-          >
+          <Route path='/service' element={user ? <Service /> : <Navigate to="/login" />}>
             <Route index element={<Stat />} />
             <Route path='webdev' element={<WebDev />} />
             <Route path='appdev' element={<AppDev />} />
@@ -40,19 +41,11 @@ const App = () => {
             <Route path='about' element={<AboutUs />} />
             <Route path='contact' element={<ContactUs />} />
           </Route>
-          <Route
-            path="/register"
-            element={user ? <Navigate to="/login" /> : <Register />}
-          />
-          <Route
-            path="/login"
-            element={user ? <Navigate to="/service" /> : <Loginpage />}
-          />
-          <Route
-            path="/"
-            element={user ? <Navigate to="/service" /> : <Navigate to="/login" />}
-          />
+          <Route path="/register" element={user ? <Navigate to="/service" /> : <Register />} />
+          <Route path="/login" element={user ? <Navigate to="/service" /> : <Loginpage />} />
+          <Route path="/" element={user ? <Navigate to="/service" /> : <Navigate to="/login" />} />
         </Routes>
+        {user && <button onClick={handleLogout} className="logout-button">Logout</button>}
       </BrowserRouter>
     </div>
   );

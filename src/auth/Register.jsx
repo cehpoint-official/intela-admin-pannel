@@ -12,7 +12,6 @@ const Register = () => {
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        setError('');
 
         if (password !== confirmPassword) {
             setError("Passwords do not match");
@@ -41,7 +40,6 @@ const Register = () => {
                             placeholder="Email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            required
                         />
                     </div>
                     <div className="mb-4">
@@ -52,7 +50,6 @@ const Register = () => {
                             placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            required
                         />
                     </div>
                     <div className="mb-4">
@@ -63,7 +60,6 @@ const Register = () => {
                             placeholder="Confirm Password"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
-                            required
                         />
                     </div>
                     {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
@@ -75,9 +71,7 @@ const Register = () => {
                     </button>
                     {registered && (
                         <div className="mt-4">
-                            <p className="text-center text-green-500">
-                                Registration successful! <Link to="/login" className="text-blue-500">Go to Login</Link>
-                            </p>
+                            <p className="text-center text-green-500">Registration successful! <Link to="/login" className="text-blue-500">Go to Login</Link></p>
                         </div>
                     )}
                     <div className="mt-4">
