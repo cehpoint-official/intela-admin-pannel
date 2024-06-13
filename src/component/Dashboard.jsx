@@ -8,7 +8,7 @@ const Dashboard = ({ toggle }) => {
     const handleToggle = () => {
         setIsToggled(!isToggled);
     };
-
+    2
     return (
         <div className="w-full">
             <TopNav toggle={toggle} handleToggle={handleToggle} isToggled={isToggled} />
