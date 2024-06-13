@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { auth } from '../config/firebase';
 
 const Register = () => {
@@ -8,7 +8,7 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
-    const navigate = useNavigate();
+    const [registered, setRegistered] = useState(false);
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -20,7 +20,7 @@ const Register = () => {
 
         try {
             await createUserWithEmailAndPassword(auth, email, password);
-            navigate('/login');
+            setRegistered(true);
         } catch (error) {
             console.error('Error registering:', error);
             setError(error.message);
@@ -69,6 +69,11 @@ const Register = () => {
                     >
                         Register
                     </button>
+                    {registered && (
+                        <div className="mt-4">
+                            <p className="text-center text-green-500">Registration successful! <Link to="/login" className="text-blue-500">Go to Login</Link></p>
+                        </div>
+                    )}
                     <div className="mt-4">
                         <p className="text-center text-gray-700">Already have an account? <Link to="/login" className="text-blue-500">Login</Link></p>
                     </div>

@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { auth } from '../config/firebase';
 
 const Loginpage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setError('');
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            navigate('/service');
+            // Redirect to '/service' using Link component
         } catch (err) {
             setError(err.message);
         }
@@ -61,7 +60,9 @@ const Loginpage = () => {
                         </button>
                     </div>
                     <div className="mt-4">
-                        <p className="text-center text-gray-700">Don't have an account? <Link to="/register" className="text-blue-500">Register</Link></p>
+                        <p className="text-center text-gray-700">
+                            Don't have an account? <Link to="/register" className="text-blue-500">Register</Link>
+                        </p>
                     </div>
                 </form>
             </div>
