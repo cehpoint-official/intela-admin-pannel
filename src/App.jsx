@@ -40,7 +40,6 @@ const App = () => {
           <Route path="/register" element={user ? <Navigate to="/service" /> : <Register />} />
           <Route path="/login" element={user ? <Navigate to="/service" /> : <Loginpage />} />
           <Route path="/webdev" element={user ? <WebDev /> : <Navigate to="/login" />} />
-          <Route path="*" element={<div>Page Not Found. <a href="/">Back to our site</a></div>} />
         </Routes>
       </BrowserRouter>
     </div>
