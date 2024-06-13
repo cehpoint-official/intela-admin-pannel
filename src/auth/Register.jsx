@@ -1,7 +1,6 @@
-// src/components/Register.js
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../config/firebase';
 
 const Register = () => {
@@ -21,7 +20,7 @@ const Register = () => {
 
         try {
             await createUserWithEmailAndPassword(auth, email, password);
-            navigate('/admin');
+            navigate('/login');
         } catch (error) {
             console.error('Error registering:', error);
             setError(error.message);
@@ -70,6 +69,9 @@ const Register = () => {
                     >
                         Register
                     </button>
+                    <div className="mt-4">
+                        <p className="text-center text-gray-700">Already have an account? <Link to="/login" className="text-blue-500">Login</Link></p>
+                    </div>
                 </form>
             </div>
         </div>

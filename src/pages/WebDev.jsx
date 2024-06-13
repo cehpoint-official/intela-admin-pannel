@@ -3,6 +3,7 @@ import { doc, updateDoc, collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
 const WebDev = () => {
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editedText, setEditedText] = useState('');
     const [editedImage, setEditedImage] = useState('');
@@ -70,6 +71,7 @@ const WebDev = () => {
 
     return (
         <>
+
             <div className="grid lg:grid-cols-2 gap-10 p-10 sm:grid-cols-1">
                 {items && items.map((item, index) => (
                     <div key={item.id} className="flex flex-col p-4 bg-blue-900 shadow-2xl rounded-lg">
