@@ -71,11 +71,11 @@ const Register = () => {
                     </button>
                     {registered && (
                         <div className="mt-4">
-                            <p className="text-center text-green-500">Registration successful! <Link to="/login" className="text-blue-500">Go to Login</Link></p>
+                            <p className="text-center text-green-500">Registration successful! <Link to="/" className="text-blue-500">Go to Login</Link></p>
                         </div>
                     )}
                     <div className="mt-4">
-                        <p className="text-center text-gray-700">Already have an account? <Link to="/login" className="text-blue-500">Login</Link></p>
+                        <p className="text-center text-gray-700">Already have an account? <Link to="/" className="text-blue-500">Login</Link></p>
                     </div>
                 </form>
             </div>
