@@ -22,7 +22,7 @@ const TopNav = ({ toggle, handleToggle, isToggled }) => {
 
     const handleLogout = async () => {
         await auth.signOut();
-        window.location.href = '/login'; // Redirect to login page after logout
+        window.location.href = '/register'; // Redirect to login page after logout
     };
 
     return (
