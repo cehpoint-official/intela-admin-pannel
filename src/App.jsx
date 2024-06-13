@@ -13,7 +13,7 @@ import NewPost from './pages/NewPost'
 import DraftPost from './pages/DraftPost'
 import Leads from './pages/Leads'
 import Loginpage from './auth/Loginpage'
-import Register from './auth/Register'
+// import Register from './auth/Register'
 const App = () => {
   return <div className='bg-blue-900'>
     <BrowserRouter>
@@ -33,7 +33,7 @@ const App = () => {
           {/* <Route path='order' element={<Order />} /> */}
         </Route>
         <Route path='/' element={<Loginpage />} />
-        <Route path='/register' element={<Register />} />
+        {/* <Route path='/register' element={<Register />} /> */}
       </Routes>
     </BrowserRouter>
   </div>
