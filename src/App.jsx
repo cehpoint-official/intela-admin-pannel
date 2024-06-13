@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from './config/firebase';
 import Sidebar, { Stat } from './component/Dashboard';
@@ -24,7 +24,10 @@ const App = () => {
     <div className='bg-blue-900'>
       <BrowserRouter>
         <Routes>
-          <Route path='/service' element={<Service />}>
+          <Route
+            path='/service'
+            element={user ? <Service /> : <Navigate to="/login" />}
+          >
             <Route index element={<Stat />} />
             <Route path='webdev' element={<WebDev />} />
             <Route path='appdev' element={<AppDev />} />
@@ -37,9 +40,18 @@ const App = () => {
             <Route path='about' element={<AboutUs />} />
             <Route path='contact' element={<ContactUs />} />
           </Route>
-          <Route path="/register" element={user ? <Navigate to="/login" /> : <Register />} />
-          <Route path="/login" element={user ? <Navigate to="/service" /> : <Loginpage />} />
-          <Route path="/" element={<Navigate to={user ? "/service" : "/login"} />} />
+          <Route
+            path="/register"
+            element={user ? <Navigate to="/login" /> : <Register />}
+          />
+          <Route
+            path="/login"
+            element={user ? <Navigate to="/service" /> : <Loginpage />}
+          />
+          <Route
+            path="/"
+            element={user ? <Navigate to="/service" /> : <Navigate to="/login" />}
+          />
         </Routes>
       </BrowserRouter>
     </div>
