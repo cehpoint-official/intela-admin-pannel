@@ -27,10 +27,11 @@ const TopNav = ({ toggle }) => {
                 <div className='flex gap-5 items-center text-white text-lg'>
                     <i class="bi bi-bell-fill relative text-2xl"></i>
                     <div>
-                        <div className="flex">
-                            <p onClick={handleLogout} className="text-white bg-blue-700 px-4 p-2 text-lg rounded-full font-semibold">
+                        <div className="flex items-center gap-3">
+                            <p className="text-white bg-blue-700 px-5 p-2 text-lg rounded-full font-semibold">
                                 {user ? user.email[0] : 'logout'}
                             </p>
+                            <span onClick={handleLogout} className="cursor-pointer bg-blue-700 p-2 rounded-lg text-sm font-semibold">LOGOUT</span>
                             {/* <Avatar className="" /> */}
                         </div>
                     </div>
