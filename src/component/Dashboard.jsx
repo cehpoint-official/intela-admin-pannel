@@ -16,7 +16,7 @@ const TopNav = ({ toggle }) => {
 
     const handleLogout = async () => {
         await auth.signOut();
-        window.location.href = '/'; // Redirect to login page after logout
+        window.location.href = '/';
     };
 
     return (
