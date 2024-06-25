@@ -27,7 +27,7 @@ const App = () => {
           <Route path='manager' element={<BlogManager />} />
           <Route path='newpost' element={<NewPost />} />
           <Route path='draftpost' element={<DraftPost />} />
-          <Route path='company' element={<Company />} />
+          {/* <Route path='company' element={<Company />} /> */}
           <Route path='about' element={<AboutUs />} />
           <Route path='contact' element={<ContactUs />} />
           {/* <Route path='order' element={<Order />} /> */}

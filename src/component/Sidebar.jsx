@@ -10,7 +10,7 @@ const Sidebar = ({ show, toggle }) => {
         { icon: "bi-person-fill", label: "Leads", to: "leads" },
         // { icon: "bi-chat-left-text-fill", label: "Chat", to: "" },
         // { icon: "bi-check-square-fill", label: "Visual Editor for page", to: "" },
-        { icon: "bi-person-fill", label: "Company Pages", to: "/" },
+        { icon: "bi-person-fill", label: "Company Pages", to: "" },
         { icon: "", label: "About Us", to: "about" },
         { icon: "", label: "Contact Us", to: "contact" },
         { icon: "bi-person-fill", label: "Blog Manager", to: "manager" },
