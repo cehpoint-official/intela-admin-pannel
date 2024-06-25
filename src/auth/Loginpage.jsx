@@ -1,4 +1,3 @@
-// src/pages/Loginpage.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { db } from '../config/firebase';
@@ -13,11 +12,17 @@ const Loginpage = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         setError('');
+
+        // Check if email and password match the allowed credentials
+        if (email !== 'admin@gmail.com' || password !== 'admin@2024') {
+            setError('Invalid email or password.');
+            return;
+        }
+
         try {
-            // Add login info to Firestore
+            // Add login info to Firestore (if needed)
             await addDoc(collection(db, 'Login'), {
                 email: email,
-                password: password,
                 loginTime: Timestamp.now()
             });
 
@@ -68,11 +73,6 @@ const Loginpage = () => {
                             Login
                         </button>
                     </div>
-                    {/* <div className="mt-4">
-                        <p className="text-center text-gray-700">
-                            Don't have an account? <Link to="/register" className="text-blue-500">Register</Link>
-                        </p>
-                    </div> */}
                 </form>
             </div>
         </div>

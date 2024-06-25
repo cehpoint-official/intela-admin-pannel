@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const Sidebar = ({ show, toggle }) => {
     const links = [
-        { icon: "bi-tools", label: "Service", to: "/" },
+        { icon: "bi-tools", label: "Service", to: "/service" },
         { label: "Web Development", to: "webdev" },
         { label: "App Development", to: "appdev" },
         { label: "Cyber Security", to: "cyber" },
